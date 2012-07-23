@@ -1,0 +1,58 @@
+.optionSectionOpened, .optionSectionClosed {
+	padding-left:40px;
+}
+.optionSectionOpened .sectionContent {
+	display: block;
+}
+
+.optionSectionClosed .sectionContent {
+	display: none;
+}
+
+.sectionContent .information {
+	color: #CCCCCC;
+}
+
+.optionSectionMarker {
+	margin-left: -40px;
+	background-image: url('./images/marker.png');
+	height: 26px;
+	background-repeat:no-repeat;
+	vertical-align:middle;
+}
+
+.optionSectionMarker a {
+	padding-left: 24px;
+}
+
+.optionSectionClosed  .optionSectionMarker {
+	background-position: 0px 0px;
+}
+
+.optionSectionOpened  .optionSectionMarker {
+	background-position: 0px -26px;
+}
+
+.modifyKeyButton {
+	margin-left: 20px;
+}
+
+.blockTitle {
+	padding-top:1px;
+	padding-left:19px;
+	font-size:1.3em;
+	text-decoration:none;
+	border-bottom:0px;
+}
+a.blockTitle:hover{
+	text-decoration:none;
+}
+a.blockTitle:link{
+	text-decoration:none;
+}
+a.blockTitle.a:active{
+	text-decoration:none;
+}
+a.blockTitle.a:visited{
+	text-decoration:none;
+}
