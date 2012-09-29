@@ -3,7 +3,7 @@ Tags: plugin, WordPress, stats, statistics, dSero, Ad Blocker, Advertisements, A
 Contributors: dSero
 Tested up to: 3.4
 Requires at least: 2.8
-Version: 1.5
+Version: 1.6
 Stable Tag: trunk
 
 == Description ==
@@ -174,6 +174,12 @@ We at [dSero](http://www.dsero.com "dSero Anti AdBlock is an Anti Ad Blocker rev
 
 == Changelog ==
 
+= 1.6 = 
+
+1. Introducing instant Ad Recovery deployment for Google AdSense: within 48 hours the Anti AdBlock detects AdSense slots and recovers ads.
+1. Introducing new high quality ad source for the Canadian audience.
+1. Better caching and enhanced performance.
+
 = 1.5 = 
 
 1. Introducing interactive response with registration confirmation email.
@@ -183,7 +189,7 @@ We at [dSero](http://www.dsero.com "dSero Anti AdBlock is an Anti Ad Blocker rev
 = 1.4 =
 
 1. Adding revenue reports, which let you see once ad recovery was deployed how much did dSero generated for you.
-1. Improving the registration method.
+1. Improving registration method.
 
 = 1.3.1 = 
 

@@ -4,7 +4,7 @@ Plugin Name: dSero Anti AdBlock for Google AdSense
 Plugin URI: http://wordpress.org/extend/plugins/dsero-anti-adblock-for-google-adsense/
 Description: AdBlock steals your revenue from Google AdSense. dSero Anti AdBlock will gain it back. Help us keep the internet free!
 Author: <a href="http://dsero.com">dSero</a>
-Version: 1.5
+Version: 1.6
 Author URI: http://www.dSero.com
 */
 
@@ -22,12 +22,14 @@ if (!class_exists("dseroCache")) {
 
 if (!class_exists("dSero")) {
 	class dSero {
-		const RAND_MAX = 10000;
+		const RAND_MAX = 330;
 
 		const agent = 2;
 
 		const sitePrivateCodeOptionName = "dSeroPrivateSiteCode";
 		const sitePublicCodeOptionName = "dSeroPublicSiteCode";
+		const siteBlockingPathOptionName = "dSeroBlockingPath";
+		const siteNonBlockingPathOptionName = "dSeroNonBlockingPath";
 		const isEnabledName = "dSeroEnabledOption";
 
 		const statusSuccess = "success";
@@ -50,9 +52,18 @@ if (!class_exists("dSero")) {
 		}
 		
 		function shouldRefresh() {
-			return (dSeroCache::$BlockingPath == '') || 
-				(dSeroCache::$NonBlockingPath == '') ||
-				(rand(1, self::RAND_MAX) < 2);
+			if (empty(dSeroCache::$BlockingPath) || empty(dSeroCache::$NonBlockingPath)) {
+				dSeroCache::$BlockingPath = get_option(dSero::siteBlockingPathOptionName);
+				dSeroCache::$NonBlockingPath = get_option(dSero::siteNonBlockingPathOptionName);
+			}
+
+			if (empty(dSeroCache::$BlockingPath) || empty(dSeroCache::$NonBlockingPath)) {
+				add_option(dSero::siteBlockingPathOptionName , '', 'param1235');
+				add_option(dSero::siteNonBlockingPathOptionName , '', 'param1234');
+				return true;
+			}
+
+			return (rand(1, self::RAND_MAX) < 2);
 		}
 		
 		function refreshCodeFromRemote($forceRefresh = false, $siteCode = NULL) {
@@ -76,6 +87,10 @@ if (!class_exists("dSero")) {
 				
 			dSeroCache::$BlockingPath = $codeJson->{"message"}->{"blockingPath"};
 			dSeroCache::$NonBlockingPath = $codeJson->{"message"}->{"nonblockingPath"};
+
+			update_option(dSero::siteBlockingPathOptionName, dSeroCache::$BlockingPath); 
+			update_option(dSero::siteNonBlockingPathOptionName, dSeroCache::$NonBlockingPath); 
+
 			return dSero::statusSuccess;
 		}
 		
@@ -90,12 +105,11 @@ if (!class_exists("dSero")) {
 		}
 
 		function installSiteCode() {
-		
 			if (!empty(dSeroCache::$SitePrivateCode) && !empty(dSeroCache::$SitePublicCode)) return;
 
 			dSeroCache::$SitePrivateCode = get_option(dSero::sitePrivateCodeOptionName);
 			dSeroCache::$SitePublicCode = get_option(dSero::sitePublicCodeOptionName);
-			if (dSeroCache::$SitePrivateCode != '' && dSeroCache::$SitePublicCode != '') return;
+			if (!empty(dSeroCache::$SitePrivateCode) && !empty(dSeroCache::$SitePublicCode)) return;
 
 			$this->generateSiteCode();
 		}
