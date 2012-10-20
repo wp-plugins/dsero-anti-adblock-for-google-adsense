@@ -3,7 +3,7 @@ Tags: plugin, WordPress, stats, statistics, dSero, Ad Blocker, Advertisements, A
 Contributors: dSero
 Tested up to: 3.4
 Requires at least: 2.8
-Version: 1.6
+Version: 1.7
 Stable Tag: trunk
 
 == Description ==
@@ -173,6 +173,11 @@ We at [dSero](http://www.dsero.com "dSero Anti AdBlock is an Anti Ad Blocker rev
 1. This shows how the same web site looks when dSero Anti AdBlock is activated and configured to reclaim your revenue.
 
 == Changelog ==
+
+= 1.7 = 
+
+1. Introducing automated blocking detection of dSero Anti AdBlock, and instant recovery from that
+1. Introducing support for query strings removal from static resources: http://wordpress.org/support/topic/how-to-remove-query-strings-from-static-resources
 
 = 1.6 = 
 
