@@ -3,7 +3,7 @@ Tags: plugin, WordPress, stats, statistics, dSero, Ad Blocker, Advertisements, A
 Contributors: dSero
 Tested up to: 3.4
 Requires at least: 2.8
-Version: 1.7
+Version: 1.8
 Stable Tag: trunk
 
 == Description ==
@@ -173,6 +173,13 @@ We at [dSero](http://www.dsero.com "dSero Anti AdBlock is an Anti Ad Blocker rev
 1. This shows how the same web site looks when dSero Anti AdBlock is activated and configured to reclaim your revenue.
 
 == Changelog ==
+
+= 1.8 = 
+
+1. Support the popular Easy AdSense (ezAdSense) WordPress extensions: http://wordpress.org/extend/plugins/easy-adsense-lite/, http://wordpress.org/extend/plugins/adsense-now-lite/, http://wordpress.org/extend/plugins/google-adsense-lite/
+1. Support the popular Cosmo Themes: http://cosmothemes.com/
+1. Support the popular Ad Widget: http://premium.wpmudev.org/project/ad-widget/
+1. Better the Ad Recovery for small sites
 
 = 1.7 = 
 

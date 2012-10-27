@@ -4,7 +4,7 @@ Plugin Name: dSero Anti AdBlock for Google AdSense
 Plugin URI: http://wordpress.org/extend/plugins/dsero-anti-adblock-for-google-adsense/
 Description: AdBlock steals your revenue from Google AdSense. dSero Anti AdBlock will gain it back. Help us keep the internet free!
 Author: <a href="http://dsero.com">dSero</a>
-Version: 1.7
+Version: 1.8
 Author URI: http://www.dSero.com
 */
 
@@ -15,22 +15,22 @@ if (!class_exists("dseroCache")) {
 		public static $CodeGenerationUrl = 'http://mds.dsero.com/adblocker.site.setup.php?';
 		public static $CodeRefreshUrl = 'http://mds.dsero.com/adblocker.site.refresh.php?s=';
 		public static $SitePrivateCode = '';
-		public static $SitePublicCode = '';
-		public static $dSeroIsEnabled = "true";
+		public static $LastRefresh = '1970-01-01 00:00:00';
 	}
 }
 
 if (!class_exists("dSero")) {
 	class dSero {
 		const RAND_MAX = 330;
+		const TIMEOUT = 7200;
+		const ZERO_DATE = '1970-01-01 00:00:00';
 
 		const agent = 2;
 
 		const sitePrivateCodeOptionName = "dSeroPrivateSiteCode";
-		const sitePublicCodeOptionName = "dSeroPublicSiteCode";
 		const siteBlockingPathOptionName = "dSeroBlockingPath";
 		const siteNonBlockingPathOptionName = "dSeroNonBlockingPath";
-		const isEnabledName = "dSeroEnabledOption";
+		const siteLastRefreshOptionName = "dSeroLastRefresh";
 
 		const statusSuccess = "success";
 		const statusBadResponse = "Temporary error, please try again";
@@ -38,28 +38,22 @@ if (!class_exists("dSero")) {
 		const statusBadCode = "Bad API Key, please enter a valid key";
 
 		function dSero() {}
-		
+
 		function dSeroPluginInstall() {
-			// automatically enable the plugin on first install,
-			// if value already exists does nothin
-			add_option(dSero::isEnabledName, "true", 'param1231');
 			$this->installSiteCode();
-			$this->getIsEnabled();
 		}
-		
-		function getIsEnabled() {
-			dseroCache::$dSeroIsEnabled = get_option(dSero::isEnabledName);
-		}
-		
+
 		function shouldRefresh() {
-			if (empty(dSeroCache::$BlockingPath) || empty(dSeroCache::$NonBlockingPath)) {
+			if (empty(dSeroCache::$BlockingPath) || empty(dSeroCache::$NonBlockingPath) || strtotime(gmdate('c')) - strtotime(dSeroCache::$LastRefresh) > self::TIMEOUT) {
+				dSeroCache::$LastRefresh = get_option(dSero::siteLastRefreshOptionName);
 				dSeroCache::$BlockingPath = get_option(dSero::siteBlockingPathOptionName);
 				dSeroCache::$NonBlockingPath = get_option(dSero::siteNonBlockingPathOptionName);
 			}
 
-			if (empty(dSeroCache::$BlockingPath) || empty(dSeroCache::$NonBlockingPath)) {
-				add_option(dSero::siteBlockingPathOptionName , '', 'param1235');
-				add_option(dSero::siteNonBlockingPathOptionName , '', 'param1234');
+			if (empty(dSeroCache::$BlockingPath) || empty(dSeroCache::$NonBlockingPath) || strtotime(gmdate('c')) - strtotime(dSeroCache::$LastRefresh) > self::TIMEOUT) {
+				add_option(dSero::siteLastRefreshOptionName, '', 'param1236');
+				add_option(dSero::siteBlockingPathOptionName, '', 'param1235');
+				add_option(dSero::siteNonBlockingPathOptionName, '', 'param1234');
 				return true;
 			}
 
@@ -88,6 +82,7 @@ if (!class_exists("dSero")) {
 			dSeroCache::$BlockingPath = $codeJson->{"message"}->{"blockingPath"};
 			dSeroCache::$NonBlockingPath = $codeJson->{"message"}->{"nonblockingPath"};
 
+			update_option(dSero::siteLastRefreshOptionName, gmdate('c')); 
 			update_option(dSero::siteBlockingPathOptionName, dSeroCache::$BlockingPath); 
 			update_option(dSero::siteNonBlockingPathOptionName, dSeroCache::$NonBlockingPath); 
 
@@ -105,11 +100,10 @@ if (!class_exists("dSero")) {
 		}
 
 		function installSiteCode() {
-			if (!empty(dSeroCache::$SitePrivateCode) && !empty(dSeroCache::$SitePublicCode)) return;
+			if (!empty(dSeroCache::$SitePrivateCode)) return;
 
 			dSeroCache::$SitePrivateCode = get_option(dSero::sitePrivateCodeOptionName);
-			dSeroCache::$SitePublicCode = get_option(dSero::sitePublicCodeOptionName);
-			if (!empty(dSeroCache::$SitePrivateCode) && !empty(dSeroCache::$SitePublicCode)) return;
+			if (!empty(dSeroCache::$SitePrivateCode)) return;
 
 			$this->generateSiteCode();
 		}
@@ -133,12 +127,9 @@ if (!class_exists("dSero")) {
 			if (empty($codeJson->{"message"})) return ;
 				
 			$privateCode = $codeJson->{"message"}->{"siteId"};
-			$publicCode = $codeJson->{"message"}->{"trackerId"};
 			try {
 				add_option(dSero::sitePrivateCodeOptionName, $privateCode, 'param1233');
-				add_option(dSero::sitePublicCodeOptionName, $publicCode, 'param1232');
 				dSeroCache::$SitePrivateCode = $privateCode;
-				dSeroCache::$SitePublicCode = $publicCode;
 			} catch (Exception $e) {
 				return;
 			}
@@ -155,15 +146,6 @@ if (!class_exists("dSero")) {
 		function printSettingsPage() {
 			//Save the updated options to the database
 			if (isset($_POST['update_dSeroSettings']) || isset($_POST['update_dSeroKey'])) { 
-				// enable/disable plugin
-				if (isset($_POST['dSeroAddContent'])) {
-					$statusCaption = ($_POST['dSeroAddContent'] == "true" ? 'Enabled' : 'Disabled');
-					update_option(dSero::isEnabledName, $_POST['dSeroAddContent']);
-					dseroCache::$dSeroIsEnabled  = $_POST['dSeroAddContent'];
-					?>
-						<div class="updated"><p><strong><?php echo $statusCaption; ?> dSero AdBooster system successfully.</strong></p></div>
-					<?php
-				}
 				// site private code
 				if (isset($_POST[dSero::sitePrivateCodeOptionName]) && !empty($_POST[dSero::sitePrivateCodeOptionName])) {
 					$statusCode = $this->refreshCodeFromRemote(true, $_POST[dSero::sitePrivateCodeOptionName]);
@@ -222,20 +204,6 @@ Your dSite API key: <input name="<?php echo dSero::sitePrivateCodeOptionName; ?>
 </form>
 </div>
 </div>
-<!--div id="enablePluginSection" class="optionSectionClosed">
-<div class="optionSectionMarker">
-<a href="javascript:void(0)" onclick="toggleSectionState(this)" class="blockTitle">Do You Want dSero AdBooster System Keep Working for You?</a>
-</div>
-<div class="sectionContent">
-<form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
-<p>"No" selection will disable the dSero AdBooster system (not recommended).</p>
-<p><label for="dSeroAddContent_yes"><input type="radio" id="dSeroAddContent_yes" name="dSeroAddContent" value="true" <?php if (dseroCache::$dSeroIsEnabled == "true") { _e('checked="checked"', "dSero"); }?> /> Yes</label>&nbsp;&nbsp;&nbsp;&nbsp;<label for="dSeroAddContent_no"><input type="radio" id="dSeroAddContent_no" name="dSeroAddContent" value="false" <?php if (dseroCache::$dSeroIsEnabled == "false") { _e('checked="checked"', "dSero"); }?>/> No</label></p>
-<div class="submit">
-<input type="submit" name="update_dSeroSettings" value="<?php _e('Update Settings', 'dSero') ?>" />
-</div>
-</form>
-</div>
-</div-->
 </div>
 			<?php
 		}//End function printSettingsPage()	
