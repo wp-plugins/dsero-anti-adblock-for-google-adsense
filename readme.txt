@@ -3,7 +3,7 @@ Tags: plugin, WordPress, stats, statistics, dSero, Ad Blocker, Advertisements, A
 Contributors: dSero
 Tested up to: 3.4
 Requires at least: 2.8
-Version: 1.8
+Version: 1.9
 Stable Tag: trunk
 
 == Description ==
@@ -35,6 +35,8 @@ That way you risk nothing and get a better compensation to your efforts.
 = Download the dSero WordPress Plugin today! =
 
 The plugin is completely free and takes approximately 60 seconds to install. 
+
+[youtube http://www.youtube.com/watch?v=MI3seOueK7M]
 
 == Installation ==
 
@@ -173,6 +175,9 @@ We at [dSero](http://www.dsero.com "dSero Anti AdBlock is an Anti Ad Blocker rev
 1. This shows how the same web site looks when dSero Anti AdBlock is activated and configured to reclaim your revenue.
 
 == Changelog ==
+
+1. Introducing "Simple Support Ads" that are described in dSero's [support ads post](http://blog.dsero.com/the-evolution-of-internet-ads/)
+1. Supporting all Google AdSense ad types
 
 = 1.8 = 
 
