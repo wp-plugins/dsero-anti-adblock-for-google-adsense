@@ -2,9 +2,9 @@
 /*
 Plugin Name: dSero Anti AdBlock for Google AdSense
 Plugin URI: http://wordpress.org/extend/plugins/dsero-anti-adblock-for-google-adsense/
-Description: AdBlock steals your revenue from Google AdSense. dSero Anti AdBlock will gain it back. Help us keep the internet free!
+Description: AdBlock steals your revenue from Google AdSense. dSero will transform AdBlock users to your biggest supporters!
 Author: <a href="http://dsero.com">dSero</a>
-Version: 1.9
+Version: 1.9.1
 Author URI: http://www.dSero.com
 */
 
@@ -68,7 +68,7 @@ if (!class_exists("dSero")) {
 			// get the site code from the servers
 			
 			try {
-				$codeData = file_get_contents(dseroCache::$CodeRefreshUrl . $siteCode);
+				$codeData = @file_get_contents(dseroCache::$CodeRefreshUrl . $siteCode);
 			} catch (Exception $e) {
 				$codeData = false;
 			}
@@ -111,7 +111,7 @@ if (!class_exists("dSero")) {
 		function generateSiteCode() {
 			// get the site code from the servers
 			try {
-				$codeData = file_get_contents(dseroCache::$CodeGenerationUrl
+				$codeData = @file_get_contents(dseroCache::$CodeGenerationUrl
 					. "host=" . urlencode($_SERVER['SERVER_NAME'])
 					. "&ua=" . urlencode($_SERVER['HTTP_USER_AGENT'])
 					. "&ag=" . urlencode(dSero::agent)
