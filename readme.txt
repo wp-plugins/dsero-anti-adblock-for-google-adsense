@@ -1,9 +1,9 @@
 === dSero Anti AdBlock for Google AdSense ===
 Tags: plugin, WordPress, stats, statistics, dSero, Ad Blocker, Advertisements, Anti AdBlock, Analytics, Recovery, text ads, display, AdBlock, Anti AdBlock, Google AdSense, AdBlock WordPress Plugin, Advertising, Monetize, Monetize Google AdSense, Support Calls
 Contributors: dSero
-Tested up to: 3.4
+Tested up to: 3.5
 Requires at least: 2.8
-Version: 1.9.2
+Version: 1.9.3
 Stable Tag: trunk
 
 == Description ==
@@ -173,7 +173,11 @@ We at [dSero](http://www.dsero.com "dSero Anti AdBlock is an Anti Ad Blocker rev
 
 == Changelog ==
 
-= 1.9.2 - 
+= 1.9.3 = 
+1. Fix: Better installation process: taking care of cases when file_get_contents is not supported by your hosting provider.
+1. New! Supporting WordPress 3.5.
+
+= 1.9.2 =
 1. New! Supporting Google Publisher Tag, Double Click and DFP Small Business
 1. New! Adding Checkout Self Service: enables you submitting your payment details and get paid using PayPal. Payments are as low as $1.
 

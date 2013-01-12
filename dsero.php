@@ -4,7 +4,7 @@ Plugin Name: dSero Anti AdBlock for Google AdSense
 Plugin URI: http://wordpress.org/extend/plugins/dsero-anti-adblock-for-google-adsense/
 Description: AdBlock steals your revenue from Google AdSense. dSero will transform AdBlock users to your biggest supporters!
 Author: <a href="http://dsero.com">dSero</a>
-Version: 1.9.2
+Version: 1.9.3
 Author URI: http://www.dSero.com
 */
 
@@ -17,6 +17,27 @@ if (!class_exists("dseroCache")) {
 		public static $SitePrivateCode = '';
 		public static $LastRefresh = '1970-01-01 00:00:00';
 	}
+}
+
+function dsero_get_contents($url) {
+	try {
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+		$codeData = curl_exec($ch);
+		curl_close($ch);
+		if (!empty($codeData)) return $codeData;
+	} catch (Exception $e) {
+		$codeData = false;
+	}
+
+	try {
+		$codeData = @file_get_contents(dseroCache::$CodeRefreshUrl . $siteCode);
+	} catch (Exception $e) {
+		$codeData = false;
+	}
+
+	return $codeData;
 }
 
 if (!class_exists("dSero")) {
@@ -34,6 +55,7 @@ if (!class_exists("dSero")) {
 
 		const statusSuccess = "success";
 		const statusBadResponse = "Temporary error, please try again";
+		const statusBadMessage = "Temporary error message, please try again";
 		const statusNoTry = "Key already exists";
 		const statusBadCode = "Bad API Key, please enter a valid key";
 
@@ -68,7 +90,7 @@ if (!class_exists("dSero")) {
 			// get the site code from the servers
 			
 			try {
-				$codeData = @file_get_contents(dseroCache::$CodeRefreshUrl . $siteCode);
+				$codeData = @dsero_get_contents(dseroCache::$CodeRefreshUrl . $siteCode);
 			} catch (Exception $e) {
 				$codeData = false;
 			}
@@ -77,7 +99,7 @@ if (!class_exists("dSero")) {
 			
 			$codeJson = json_decode($codeData);
 			if ($codeJson->{"status"} != 1) return dSero::statusBadCode;
-			if (empty($codeJson->{"message"})) return dSero::statusBadResponse;
+			if (empty($codeJson->{"message"})) return dSero::statusBadMessage;
 				
 			dSeroCache::$BlockingPath = $codeJson->{"message"}->{"blockingPath"};
 			dSeroCache::$NonBlockingPath = $codeJson->{"message"}->{"nonblockingPath"};
@@ -111,7 +133,7 @@ if (!class_exists("dSero")) {
 		function generateSiteCode() {
 			// get the site code from the servers
 			try {
-				$codeData = @file_get_contents(dseroCache::$CodeGenerationUrl
+				$codeData = @dsero_get_contents(dseroCache::$CodeGenerationUrl
 					. "host=" . urlencode($_SERVER['SERVER_NAME'])
 					. "&ua=" . urlencode($_SERVER['HTTP_USER_AGENT'])
 					. "&ag=" . urlencode(dSero::agent)
