@@ -3,7 +3,7 @@ Tags: plugin, WordPress, stats, statistics, dSero, Ad Blocker, Advertisements, A
 Contributors: dSero
 Tested up to: 3.5
 Requires at least: 2.8
-Version: 1.9.3
+Version: 1.9.4
 Stable Tag: trunk
 
 == Description ==
@@ -172,13 +172,15 @@ We at [dSero](http://www.dsero.com "dSero Anti AdBlock is an Anti Ad Blocker rev
 1. This shows how the same page looks when an AdBlock is used and the dSero Supporters program is implemented.
 
 == Changelog ==
+= 1.9.4 - 
+1. New! Supporting Google Publisher Tag (GPT).
 
 = 1.9.3 = 
 1. Fix: Better installation process: taking care of cases when file_get_contents is not supported by your hosting provider.
 1. New! Supporting WordPress 3.5.
 
-= 1.9.2 =
-1. New! Supporting Google Publisher Tag, Double Click and DFP Small Business
+= 1.9.2 - 
+1. New! Supporting Double Click and DFP Small Business
 1. New! Adding Checkout Self Service: enables you submitting your payment details and get paid using PayPal. Payments are as low as $1.
 
 = 1.9.1 = 

@@ -4,7 +4,7 @@ Plugin Name: dSero Anti AdBlock for Google AdSense
 Plugin URI: http://wordpress.org/extend/plugins/dsero-anti-adblock-for-google-adsense/
 Description: AdBlock steals your revenue from Google AdSense. dSero will transform AdBlock users to your biggest supporters!
 Author: <a href="http://dsero.com">dSero</a>
-Version: 1.9.3
+Version: 1.9.4
 Author URI: http://www.dSero.com
 */
 
